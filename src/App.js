@@ -2,6 +2,7 @@ import React from 'react'
 import Blog from './components/Blog'
 import Create from './components/Create'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -66,6 +67,9 @@ class App extends React.Component {
           blogs: this.state.blogs.concat(newBlog)
         })
       })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   showMessage = (message, msgType) => {
@@ -116,6 +120,7 @@ class App extends React.Component {
 
     return (
       <div>
+
         <Notification
           message={this.state.message}
           msgType={this.state.msgType} />
@@ -123,10 +128,16 @@ class App extends React.Component {
         <h1>X combinateur blogs</h1>
 
         {!this.state.user && loginForm()}
+
         {this.state.user &&
           <div>
             <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
-            <Create blogCreator={this.addBlog} />
+
+            <Togglable buttonLabel="create new...">
+              <Create blogCreator={this.addBlog} />
+            </Togglable>
+
+            <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>
               <Blog key={blog._id} blog={blog} />)}
           </div>
