@@ -46,15 +46,16 @@ class App extends React.Component {
       blogService.setToken(user.token)
 
       this.setState({ username: '', password: '', user })
-      this.showMessage(`Welcome back, ${user.name}!`)
+      this.showMessage(`Welcome back, ${user.name}!`, 'info')
     } catch (exception) {
-      this.showMessage('Invalid username or password.')
+      this.showMessage('Invalid username or password.', 'error')
     }
   }
 
   logout = (event) => {
     window.localStorage.clear()
     this.setState({ user: null })
+    this.showMessage('Logged out.', 'info')
   }
 
   addBlog = (blog) => {
@@ -67,23 +68,27 @@ class App extends React.Component {
       })
   }
 
-  showMessage = (text) => {
+  showMessage = (message, msgType) => {
     this.setState({
-        message: text
+      message: message,
+      msgType: msgType
     })
     setTimeout(() => {
-        this.setState({ message: null })
+      this.setState({
+        message: null,
+        msgType: null
+      })
     }, 3000)
-}
+  }
 
   render() {
     const loginForm = () => (
       <div>
-        <h2>Kirjaudu</h2>
+        <h2>Log in</h2>
 
         <form onSubmit={this.login}>
           <div>
-            käyttäjätunnus
+            username
             <input
               type="text"
               name="username"
@@ -92,7 +97,7 @@ class App extends React.Component {
             />
           </div>
           <div>
-            salasana
+            password
             <input
               type="password"
               name="password"
@@ -105,23 +110,27 @@ class App extends React.Component {
       </div>
     )
 
-    if (!this.state.user) {
-      return loginForm()
-    }
+    // if (!this.state.user) {
+    //   return loginForm()
+    // }
 
     return (
       <div>
-        <h2>X combinateur blogs</h2>
-        <Notification message={this.state.message} />
+        <Notification
+          message={this.state.message}
+          msgType={this.state.msgType} />
+
+        <h1>X combinateur blogs</h1>
+
+        {!this.state.user && loginForm()}
         {this.state.user &&
           <div>
             <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
             <Create blogCreator={this.addBlog} />
+            {this.state.blogs.map(blog =>
+              <Blog key={blog._id} blog={blog} />)}
           </div>
         }
-        {this.state.blogs.map(blog =>
-          <Blog key={blog._id} blog={blog} />
-        )}
       </div>
     );
   }
