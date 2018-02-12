@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import Create from './components/Create'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -59,6 +60,23 @@ class App extends React.Component {
     this.setState({user: null})
   }
 
+  addBlog = (blog) => {
+    //event.preventDefault()
+    // const blogObject = {
+    //   title:event.target.title.value,
+    //   author:event.target.author.value,
+    //   url:event.target.url.value
+    // }
+    
+    blogService
+       .create(blog)
+       .then(newBlog => {
+         this.setState({
+           blogs: this.state.blogs.concat(newBlog)
+         })
+       })
+    }
+
   render() {
     const loginForm = () => (
       <div>
@@ -94,10 +112,11 @@ class App extends React.Component {
 
     return (
       <div>
-        <h2>blogs</h2>
+        <h2>X combinateur blogs</h2>
         {this.state.user &&
           <div>
             <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
+            <Create blogCreator={this.addBlog} />
           </div>
         }
         {this.state.blogs.map(blog =>
