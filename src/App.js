@@ -1,6 +1,7 @@
 import React from 'react'
 import Blog from './components/Blog'
 import Create from './components/Create'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,7 +12,8 @@ class App extends React.Component {
       blogs: [],
       user: null,
       username: '',
-      password: ''
+      password: '',
+      message: null
     }
   }
 
@@ -23,10 +25,9 @@ class App extends React.Component {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      this.setState({user})
+      this.setState({ user })
       blogService.setToken(user.token)
     }
-  
   }
 
   handleLoginFieldChange = (event) => {
@@ -43,39 +44,37 @@ class App extends React.Component {
 
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-  
+
       this.setState({ username: '', password: '', user })
+      this.showMessage(`Welcome back, ${user.name}!`)
     } catch (exception) {
-      this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
-      })
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)
+      this.showMessage('Invalid username or password.')
     }
   }
 
   logout = (event) => {
     window.localStorage.clear()
-    this.setState({user: null})
+    this.setState({ user: null })
   }
 
   addBlog = (blog) => {
-    //event.preventDefault()
-    // const blogObject = {
-    //   title:event.target.title.value,
-    //   author:event.target.author.value,
-    //   url:event.target.url.value
-    // }
-    
     blogService
-       .create(blog)
-       .then(newBlog => {
-         this.setState({
-           blogs: this.state.blogs.concat(newBlog)
-         })
-       })
-    }
+      .create(blog)
+      .then(newBlog => {
+        this.setState({
+          blogs: this.state.blogs.concat(newBlog)
+        })
+      })
+  }
+
+  showMessage = (text) => {
+    this.setState({
+        message: text
+    })
+    setTimeout(() => {
+        this.setState({ message: null })
+    }, 3000)
+}
 
   render() {
     const loginForm = () => (
@@ -113,6 +112,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>X combinateur blogs</h2>
+        <Notification message={this.state.message} />
         {this.state.user &&
           <div>
             <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
