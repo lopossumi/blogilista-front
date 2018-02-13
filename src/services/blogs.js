@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+const baseUrl = '/api/blogs/'
 
 let token = null
 
@@ -21,4 +21,13 @@ const create = async (newObject) => {
   return response.data
 }
 
-export default { getAll, setToken, create }
+const vote = async (id, votes) => {
+  const config = {
+    headers: { 'Authorization': token }
+  }
+
+  const response = await axios.put(baseUrl+id, {likes: votes+1}, config)
+  return response.data
+}
+
+export default { getAll, setToken, create, vote }

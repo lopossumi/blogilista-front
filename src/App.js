@@ -83,6 +83,11 @@ class App extends React.Component {
       })
   }
 
+  vote = (blog) => {
+    blogService
+      .vote(blog._id, blog.likes)
+  }
+
   showMessage = (message, msgType) => {
     this.setState({
       message: message,
@@ -95,7 +100,7 @@ class App extends React.Component {
       })
     }, 3000)
   }
-
+  
   render() {
 
     return (
@@ -129,7 +134,9 @@ class App extends React.Component {
 
             <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>
-              <Blog key={blog._id} blog={blog} />)}
+              <Blog 
+                key={blog._id}
+                blog={blog}/>)}
           </div>
         )}
       </div>

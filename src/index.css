@@ -1,3 +1,7 @@
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
 .error {
     color: white;
     background: crimson;
@@ -41,4 +45,21 @@ h1{
 
 .createForm input{
     width:100%;
+}
+
+.blogHeader {
+    border: 1px solid black;
+    padding:10px;
+    margin-top:10px;
+}
+
+.blogDetails {
+    margin-left:20px;
+    margin-top:-1px;
+    border: 1px dashed black;
+    padding: 10px;
+}
+
+.blogHeader:hover{
+    background: lightgreen;
 }

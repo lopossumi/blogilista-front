@@ -22,7 +22,7 @@ const LoginForm = ({username, password, fieldHandler, loginHandler}) => (
           onChange={fieldHandler}
         />
       </div>
-      <button type="submit">kirjaudu</button>
+      <button type="submit">login</button>
     </form>
   </div>
 )
