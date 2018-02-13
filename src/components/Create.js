@@ -27,7 +27,7 @@ class Create extends React.Component {
         const author = this.state.author
         const url = this.state.url
 
-        this.clear()
+        //this.clear()
 
         this.props.blogCreator({
             title: title,

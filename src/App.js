@@ -19,16 +19,21 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
       blogService.setToken(user.token)
+
+      this.getBlogs()
     }
+  }
+
+  getBlogs() {
+    blogService.getAll().then(blogs =>
+      this.setState({ blogs })
+    )
   }
 
   handleLoginFieldChange = (event) => {
@@ -48,6 +53,8 @@ class App extends React.Component {
 
       this.setState({ username: '', password: '', user })
       this.showMessage(`Welcome back, ${user.name}!`, 'info')
+      this.getBlogs()
+
     } catch (exception) {
       this.showMessage('Invalid username or password.', 'error')
     }
@@ -66,6 +73,9 @@ class App extends React.Component {
         this.setState({
           blogs: this.state.blogs.concat(newBlog)
         })
+        this.showMessage(`a new blog '${blog.title}' by ${blog.author} added.`, 'info')
+        this.createForm.clear()
+        this.createToggle.toggleVisibility()
       })
       .catch(error => {
         console.log(error)
@@ -129,19 +139,23 @@ class App extends React.Component {
 
         {!this.state.user && loginForm()}
 
-        {this.state.user &&
+        {this.state.user &&(
           <div>
-            <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
+          <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
 
-            <Togglable buttonLabel="create new...">
-              <Create blogCreator={this.addBlog} />
-            </Togglable>
+          <Togglable 
+            buttonLabel="create new..."
+            ref={component => this.createToggle = component}>
+            <Create 
+              blogCreator={this.addBlog} 
+              ref={component => this.createForm = component}/>
+          </Togglable>
 
             <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>
               <Blog key={blog._id} blog={blog} />)}
           </div>
-        }
+        )}
       </div>
     );
   }
