@@ -1,7 +1,8 @@
 import React from 'react'
 import Blog from './components/Blog'
-import Create from './components/Create'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import CreateForm from './components/CreateForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -96,37 +97,6 @@ class App extends React.Component {
   }
 
   render() {
-    const loginForm = () => (
-      <div>
-        <h2>Log in</h2>
-
-        <form onSubmit={this.login}>
-          <div>
-            username
-            <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleLoginFieldChange}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleLoginFieldChange}
-            />
-          </div>
-          <button type="submit">kirjaudu</button>
-        </form>
-      </div>
-    )
-
-    // if (!this.state.user) {
-    //   return loginForm()
-    // }
 
     return (
       <div>
@@ -137,19 +107,25 @@ class App extends React.Component {
 
         <h1>X combinateur blogs</h1>
 
-        {!this.state.user && loginForm()}
+        {!this.state.user &&
+          <LoginForm 
+            username={this.state.username}
+            password={this.state.password}
+            fieldHandler={this.handleLoginFieldChange}
+            loginHandler={this.login}/>
+        }
 
-        {this.state.user &&(
+        {this.state.user && (
           <div>
-          <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
+            <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
 
-          <Togglable 
-            buttonLabel="create new..."
-            ref={component => this.createToggle = component}>
-            <Create 
-              blogCreator={this.addBlog} 
-              ref={component => this.createForm = component}/>
-          </Togglable>
+            <Togglable
+              buttonLabel="create new..."
+              ref={component => this.createToggle = component}>
+              <CreateForm
+                blogCreator={this.addBlog}
+                ref={component => this.createForm = component} />
+            </Togglable>
 
             <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>

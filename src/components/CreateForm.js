@@ -1,5 +1,8 @@
 import React from 'react'
-class Create extends React.Component {
+
+const fieldLength = 50
+
+class CreateForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -38,7 +41,7 @@ class Create extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='createForm'>
                 <h3>create new</h3>
                 <form id='blogCreateForm' onSubmit={this.handleSubmit}>
                 <table>
@@ -50,6 +53,7 @@ class Create extends React.Component {
                                     name="title"
                                     value={this.state.title}
                                     onChange={this.handleFieldChange}
+                                    size={fieldLength}
                                 />
                             </td></tr>
                         <tr><td>author</td>
@@ -59,6 +63,7 @@ class Create extends React.Component {
                                     name="author"
                                     value={this.state.author}
                                     onChange={this.handleFieldChange}
+                                    size={fieldLength}
                                 /></td></tr>
                         <tr><td>url</td>
                             <td>
@@ -67,6 +72,7 @@ class Create extends React.Component {
                                     name="url"
                                     value={this.state.url}
                                     onChange={this.handleFieldChange} 
+                                    size={fieldLength}
                                     /></td></tr>
                         <tr><td><button type="submit">create</button></td><td></td></tr>
                     </tbody>
@@ -77,4 +83,4 @@ class Create extends React.Component {
     }
 }
 
-export default Create
+export default CreateForm
