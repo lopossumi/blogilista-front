@@ -21,12 +21,12 @@ const create = async (newObject) => {
   return response.data
 }
 
-const vote = async (id, votes) => {
+const vote = async (blog) => {
   const config = {
     headers: { 'Authorization': token }
   }
 
-  const response = await axios.put(baseUrl+id, {likes: votes+1}, config)
+  const response = await axios.put(baseUrl+blog._id, {likes: blog.likes+1}, config)
   return response.data
 }
 

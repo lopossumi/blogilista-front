@@ -13,7 +13,6 @@ class Blog extends React.Component {
     this.setState({
       showDetails: !this.state.showDetails
     })
-    console.log('click')
   }
 
   render() {
@@ -24,7 +23,7 @@ class Blog extends React.Component {
         {this.state.showDetails &&
           <div className='blogDetails'>
             <a href={this.props.blog.url}>{this.props.blog.url}</a><br />
-            {this.props.blog.likes} like(s) <button style={{ zIndex: 999 }}>vote</button><br />
+            {this.props.blog.likes} {this.props.blog.likes === 1 ? 'like' : 'likes'} <button value={this.props.blog._id} onClick={this.props.voteHandler}>vote</button><br />
             {this.props.blog.user && `added by ${this.props.blog.user.name}`}
           </div>}
 

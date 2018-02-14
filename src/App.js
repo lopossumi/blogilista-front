@@ -83,9 +83,15 @@ class App extends React.Component {
       })
   }
 
-  vote = (blog) => {
-    blogService
-      .vote(blog._id, blog.likes)
+  vote = async (event) => {
+    const votedId = event.target.value
+    const blog = this.state.blogs.find(blog => blog._id === votedId)
+    const updatedBlog = await blogService.vote(blog)
+
+    const newBlogs = this.state.blogs.map(blog => blog._id === votedId ? updatedBlog : blog)
+    
+    this.setState({blogs:newBlogs})
+    this.showMessage(`you liked ${blog.title} by ${blog.author}`, 'info')
   }
 
   showMessage = (message, msgType) => {
@@ -100,7 +106,7 @@ class App extends React.Component {
       })
     }, 3000)
   }
-  
+
   render() {
 
     return (
@@ -122,7 +128,7 @@ class App extends React.Component {
 
         {this.state.user && (
           <div>
-            <p>{this.state.user.name} logged in <button onClick={this.logout}>logout</button></p>
+            <p>Logged in as {this.state.user.name} <button onClick={this.logout}>sign out</button></p>
 
             <Togglable
               buttonLabel="create new..."
@@ -136,7 +142,8 @@ class App extends React.Component {
             {this.state.blogs.map(blog =>
               <Blog 
                 key={blog._id}
-                blog={blog}/>)}
+                blog={blog}
+                voteHandler={this.vote}/>)}
           </div>
         )}
       </div>
