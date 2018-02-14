@@ -31,17 +31,17 @@ class App extends React.Component {
     }
   }
 
-  sortBlogs(){
+  sortBlogs() {
     let blogArray = Array.from(this.state.blogs)
-    blogArray.sort((a,b) => b.likes-a.likes)
-    this.setState({blogs: blogArray})
+    blogArray.sort((a, b) => b.likes - a.likes)
+    this.setState({ blogs: blogArray })
   }
 
   getBlogs() {
-    blogService.getAll().then(blogs =>{
+    blogService.getAll().then(blogs => {
       let blogArray = Array.from(blogs)
-      blogArray.sort((a,b) => b.likes-a.likes)
-      this.setState({blogs: blogArray})
+      blogArray.sort((a, b) => b.likes - a.likes)
+      this.setState({ blogs: blogArray })
     })
   }
 
@@ -66,6 +66,21 @@ class App extends React.Component {
 
     } catch (exception) {
       this.showMessage('Invalid username or password.', 'error')
+    }
+  }
+
+  remove = async (event) => {
+    if (window.confirm('are you sure?')) {
+      const id = event.target.value
+      console.log('remove ', id)
+      try {
+        await blogService
+          .remove(event.target.value)
+        const blogs = this.state.blogs.filter(item => item._id !== id)
+        this.setState({ blogs })
+      } catch (e) {
+        this.showMessage('Remove not allowed.', 'error')
+      }
     }
   }
 
@@ -97,8 +112,8 @@ class App extends React.Component {
     const updatedBlog = await blogService.vote(blog)
 
     const newBlogs = this.state.blogs.map(blog => blog._id === votedId ? updatedBlog : blog)
-    
-    this.setState({blogs:newBlogs})
+
+    this.setState({ blogs: newBlogs })
     this.showMessage(`you liked ${blog.title} by ${blog.author}`, 'info')
     this.sortBlogs()
   }
@@ -128,11 +143,11 @@ class App extends React.Component {
         <h1>X combinateur blogs</h1>
 
         {!this.state.user &&
-          <LoginForm 
+          <LoginForm
             username={this.state.username}
             password={this.state.password}
             fieldHandler={this.handleLoginFieldChange}
-            loginHandler={this.login}/>
+            loginHandler={this.login} />
         }
 
         {this.state.user && (
@@ -148,11 +163,13 @@ class App extends React.Component {
             </Togglable>
 
             <h2>List of blogs</h2>
-            {this.state.blogs.map(blog =>     
-              <Blog 
+            {this.state.blogs.map(blog =>
+              <Blog
                 key={blog._id}
                 blog={blog}
-                voteHandler={this.vote}/>)}
+                voteHandler={this.vote}
+                removeHandler={this.remove}
+                myUserName={this.state.user.username} />)}
           </div>
         )}
       </div>

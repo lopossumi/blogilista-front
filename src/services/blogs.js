@@ -21,13 +21,22 @@ const create = async (newObject) => {
   return response.data
 }
 
+const remove = async (id) => {
+  const config = {
+    headers: { 'Authorization': token }
+  }
+
+  const response = await axios.delete(baseUrl + id, config)
+  return response.data
+}
+
 const vote = async (blog) => {
   const config = {
     headers: { 'Authorization': token }
   }
 
-  const response = await axios.put(baseUrl+blog._id, {likes: blog.likes+1}, config)
+  const response = await axios.put(baseUrl + blog._id, { likes: blog.likes + 1 }, config)
   return response.data
 }
 
-export default { getAll, setToken, create, vote }
+export default { getAll, setToken, create, vote, remove }
