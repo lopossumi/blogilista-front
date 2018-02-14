@@ -31,10 +31,18 @@ class App extends React.Component {
     }
   }
 
+  sortBlogs(){
+    let blogArray = Array.from(this.state.blogs)
+    blogArray.sort((a,b) => b.likes-a.likes)
+    this.setState({blogs: blogArray})
+  }
+
   getBlogs() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
+    blogService.getAll().then(blogs =>{
+      let blogArray = Array.from(blogs)
+      blogArray.sort((a,b) => b.likes-a.likes)
+      this.setState({blogs: blogArray})
+    })
   }
 
   handleLoginFieldChange = (event) => {
@@ -92,6 +100,7 @@ class App extends React.Component {
     
     this.setState({blogs:newBlogs})
     this.showMessage(`you liked ${blog.title} by ${blog.author}`, 'info')
+    this.sortBlogs()
   }
 
   showMessage = (message, msgType) => {
@@ -139,7 +148,7 @@ class App extends React.Component {
             </Togglable>
 
             <h2>List of blogs</h2>
-            {this.state.blogs.map(blog =>
+            {this.state.blogs.map(blog =>     
               <Blog 
                 key={blog._id}
                 blog={blog}
