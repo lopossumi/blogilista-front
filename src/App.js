@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import SimpleBlog from './components/SimpleBlog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
@@ -69,21 +70,6 @@ class App extends React.Component {
     }
   }
 
-  remove = async (event) => {
-    if (window.confirm('are you sure?')) {
-      const id = event.target.value
-      console.log('remove ', id)
-      try {
-        await blogService
-          .remove(event.target.value)
-        const blogs = this.state.blogs.filter(item => item._id !== id)
-        this.setState({ blogs })
-      } catch (e) {
-        this.showMessage('Remove not allowed.', 'error')
-      }
-    }
-  }
-
   logout = (event) => {
     window.localStorage.clear()
     this.setState({ user: null })
@@ -106,16 +92,28 @@ class App extends React.Component {
       })
   }
 
-  vote = async (event) => {
-    const votedId = event.target.value
-    const blog = this.state.blogs.find(blog => blog._id === votedId)
+  vote = (id) => async () => {
+    const blog = this.state.blogs.find(blog => blog._id === id)
     const updatedBlog = await blogService.vote(blog)
 
-    const newBlogs = this.state.blogs.map(blog => blog._id === votedId ? updatedBlog : blog)
+    const newBlogs = this.state.blogs.map(blog => blog._id === id ? updatedBlog : blog)
 
     this.setState({ blogs: newBlogs })
     this.showMessage(`you liked ${blog.title} by ${blog.author}`, 'info')
     this.sortBlogs()
+  }
+
+  remove = (id) => async () => {
+    if (window.confirm('are you sure?')) {
+      try {
+        await blogService
+          .remove(id)
+        const blogs = this.state.blogs.filter(item => item._id !== id)
+        this.setState({ blogs })
+      } catch (e) {
+        this.showMessage('Remove not allowed.', 'error')
+      }
+    }
   }
 
   showMessage = (message, msgType) => {
@@ -164,12 +162,19 @@ class App extends React.Component {
 
             <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>
-              <Blog
+              // <Blog
+              //   key={blog._id}
+              //   blog={blog}
+              //   voteHandler={this.vote(blog._id)}
+              //   removeHandler={this.remove(blog._id)}
+              //   myUserName={this.state.user.username} />
+                
+                <SimpleBlog
                 key={blog._id}
                 blog={blog}
-                voteHandler={this.vote}
-                removeHandler={this.remove}
-                myUserName={this.state.user.username} />)}
+                onClick={this.vote(blog._id)}
+                />
+                )}
           </div>
         )}
       </div>
