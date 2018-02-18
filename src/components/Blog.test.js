@@ -4,6 +4,8 @@ import SimpleBlog from './SimpleBlog'
 
 describe.only('<SimpleBlog />', () => {
 
+    const mockHandler = jest.fn()
+
     const blog = {
         title: 'Component test title',
         author: 'Component test author',
@@ -13,7 +15,11 @@ describe.only('<SimpleBlog />', () => {
   
     let blogComponent
     beforeEach(() => {
-        blogComponent = shallow(<SimpleBlog blog={blog} />)
+        blogComponent = shallow(
+        <SimpleBlog 
+            blog={blog} 
+            onClick={mockHandler}
+            />)
     })
   
   it('renders title in header', () => {
@@ -29,5 +35,12 @@ describe.only('<SimpleBlog />', () => {
   it('renders likes correctly in details', () => {
     const contentDiv = blogComponent.find('.blogDetails')
     expect(contentDiv.text()).toContain(blog.likes)
+  })
+
+  it('clicking the button twice calls event handler twice', () => {
+    const button = blogComponent.find('button')
+    button.simulate('click')
+    button.simulate('click')  
+    expect(mockHandler.mock.calls.length).toBe(2)
   })
 })
