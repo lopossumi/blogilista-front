@@ -5,7 +5,7 @@ const LoginForm = ({username, password, fieldHandler, loginHandler}) => (
     <h2>Log in</h2>
 
     <form onSubmit={loginHandler}>
-    <table>
+    <table className='loginFormTable'>
       <tbody>
         <tr>
           <td>username</td>

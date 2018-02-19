@@ -34,7 +34,7 @@ describe.only('<Blog />', () => {
 
   it('does not show details before click', () => {
     const contentDiv = blogComponent.find('.blogDetails')
-    expect(contentDiv===undefined)
+    expect(contentDiv.length).toBe(0)
   })
 
   it('details are shown after clicking header', () => {
