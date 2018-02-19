@@ -1,6 +1,5 @@
 import React from 'react'
 import Blog from './components/Blog'
-import SimpleBlog from './components/SimpleBlog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
@@ -162,19 +161,13 @@ class App extends React.Component {
 
             <h2>List of blogs</h2>
             {this.state.blogs.map(blog =>
-              // <Blog
-              //   key={blog._id}
-              //   blog={blog}
-              //   voteHandler={this.vote(blog._id)}
-              //   removeHandler={this.remove(blog._id)}
-              //   myUserName={this.state.user.username} />
-                
-                <SimpleBlog
+              <Blog
                 key={blog._id}
                 blog={blog}
-                onClick={this.vote(blog._id)}
-                />
-                )}
+                voteHandler={this.vote(blog._id)}
+                removeHandler={this.remove(blog._id)}
+                myUserName={this.state.user.username} />
+            )}
           </div>
         )}
       </div>
